@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bộ Câu Hỏi Phỏng Vấn - QA/QC Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e1b4b;
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-cyan: #06b6d4;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header Animation */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .subtitle {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 16px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #a5b4fc;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-out 0.5s backwards;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-track {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        /* Category styling */
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 20px 0;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .category-badge {
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .badge-hot {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge-important {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fcd34d;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-bonus {
+            background: rgba(6, 182, 212, 0.15);
+            color: #67e8f9;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        /* Accordion Styling (Glassmorphism) */
+        .accordion {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out backwards;
+        }
+
+        .accordion:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .accordion.active {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .accordion.done {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .accordion.done .accordion-header .q-number {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        /* Add staggered animation delays */
+        .accordion:nth-child(2) { animation-delay: 0.1s; }
+        .accordion:nth-child(3) { animation-delay: 0.2s; }
+        .accordion:nth-child(4) { animation-delay: 0.3s; }
+        .accordion:nth-child(5) { animation-delay: 0.4s; }
+
+        .accordion-header {
+            width: 100%;
+            padding: 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .q-number {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .q-text {
+            flex: 1;
+        }
+
+        .difficulty {
+            flex-shrink: 0;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .diff-easy {
+            background: rgba(16, 185, 129, 0.15);
+            color: #6ee7b7;
+        }
+
+        .diff-medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fcd34d;
+        }
+
+        .diff-hard {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+        }
+
+        .icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .icon::before,
+        .icon::after {
+            content: '';
+            position: absolute;
+            background-color: var(--text-main);
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .icon::before {
+            top: 11px;
+            left: 0;
+            width: 24px;
+            height: 2px;
+        }
+
+        .icon::after {
+            top: 0;
+            left: 11px;
+            width: 2px;
+            height: 24px;
+        }
+
+        .accordion.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion.active .icon::after {
+            transform: scaleY(0);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .accordion.active .accordion-content {
+            max-height: 3000px;
+            transition: max-height 0.8s ease-in-out;
+        }
+
+        .content-inner {
+            padding: 0 24px 24px 24px;
+        }
+
+        /* Guide / Tips UI */
+        .answer-box {
+            margin-top: 15px;
+            color: #cbd5e1;
+            font-size: 1.05rem;
+        }
+
+        .answer-box > p:first-child {
+            color: #e2e8f0;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .highlight-tip {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--accent-green);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-tip strong {
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .warning-tip {
+            margin-top: 14px;
+            padding: 16px;
+            background: rgba(239, 68, 68, 0.08);
+            border-left: 4px solid var(--accent-red);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-tip strong {
+            color: #fca5a5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .keyword {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .tech-word {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-family: monospace;
+        }
+
+        ul.answer-list {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        ul.answer-list li {
+            margin-bottom: 8px;
+        }
+
+        ul.answer-list li strong {
+            color: #e2e8f0;
+        }
+
+        /* Mark done button */
+        .mark-done-btn {
+            margin-top: 20px;
+            padding: 8px 20px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .mark-done-btn:hover {
+            background: rgba(16, 185, 129, 0.25);
+            transform: scale(1.02);
+        }
+
+        .mark-done-btn.is-done {
+            background: rgba(16, 185, 129, 0.3);
+            color: #a7f3d0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            animation: fadeIn 1s ease-out 1s backwards;
+        }
+
+        footer a {
+            color: #a5b4fc;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .accordion-header {
+                font-size: 1rem;
+                padding: 18px;
+            }
+
+            .q-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Mock Interview: QA/QC Engineer</h1>
+            <p>Bí quyết trả lời ghi điểm tuyệt đối với nhà tuyển dụng Payment/E-wallet</p>
+            <span class="subtitle">📋 Dựa trên CV Nguyen Thi Minh Thu &bull; 10 câu hỏi &bull; 4 chủ đề</span>
+        </header>
+
+        <!-- Progress -->
+        <div class="progress-bar">
+            <div class="progress-info">
+                <span>Tiến độ ôn tập</span>
+                <span id="progress-text">0 / 10 câu đã ôn</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- ==================== CATEGORY 1 ==================== -->
+        <h2 class="category-title">
+            🎯 1. Domain Payment & Kinh nghiệm thực tế
+            <span class="category-badge badge-hot">HOT</span>
+        </h2>
+
+        <!-- Q1 -->
+        <div class="accordion" data-q="1">
+            <button class="accordion-header">
+                <span class="q-number">01</span>
+                <span class="q-text">Bạn hãy giới thiệu về bản thân và kinh nghiệm liên quan đến hệ thống thanh toán (Payment System)?</span>
+                <span class="difficulty diff-medium">Medium</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời (dựa trên CV của bạn):</strong></p>
+                        <ul class="answer-list">
+                            <li>Em có hơn <strong>3 năm kinh nghiệm</strong> làm QA/QC, trong đó đặc biệt mạnh ở mảng hệ thống ERP kết hợp thanh toán và tích hợp.</li>
+                            <li>Tại ATOM Solution, em đã test tích hợp <strong>đa phương thức thanh toán</strong>: E-com, POS, Soundbox, và các cổng thanh toán online - phối hợp trực tiếp với 3 bank partner: <span class="keyword">OCB, BVB, mPAY</span>.</li>
+                            <li>Em đã tham gia go-live thành công cho <strong>4 tổ chức giáo dục lớn</strong>, đảm bảo toàn bộ luồng thanh toán hoạt động ổn định trên production.</li>
+                            <li>Ngoài ra em cũng có kinh nghiệm test ở domain <strong>Web3/Blockchain</strong> - hiểu về wallet transactions, token swap, gas fees.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Nhấn mạnh bạn không chỉ test UI mà hiểu sâu <span class="keyword">luồng tiền đi thế nào</span>: từ khách hàng → qua cổng thanh toán → đến bank → callback về hệ thống. Đề cập đến tích hợp hóa đơn điện tử (M-invoice, Misa) vì đây là điểm khác biệt lớn so với ứng viên khác.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="accordion" data-q="2">
+            <button class="accordion-header">
+                <span class="q-number">02</span>
+                <span class="q-text">Theo bạn, điểm khác biệt lớn nhất khi test hệ thống Payment/E-wallet so với một hệ thống quản lý thông thường là gì?</span>
+                <span class="difficulty diff-hard">Hard</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li><strong>Tính ACID:</strong> Giao dịch thanh toán yêu cầu khắt khe về tính nhất quán dữ liệu. Tiền trừ phía KH thì phải cộng phía đối tác, nếu kẹt mạng phải <span class="keyword">roll-back</span>.</li>
+                            <li><strong>Bảo mật & Bên thứ 3:</strong> Payment luôn phụ thuộc kết nối API với Bank/Partner. Phải test kỹ xử lý <em>Timeout</em>, mất kết nối giữa chừng, token hết hạn.</li>
+                            <li><strong>Test Concurrent:</strong> Điều gì xảy ra nếu user click thanh toán 2 lần liên tục trong lúc lag? Hệ thống có bị trừ tiền 2 lần không?</li>
+                            <li><strong>Kinh nghiệm thực tế:</strong> Ở ATOM, em đã gặp case staging của Bank partner bị offline, phải dùng <span class="tech-word">Postman Mock</span> để test độc lập luồng callback.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Bật ra keyword: <span class="keyword">Data Integrity</span>, <span class="keyword">Idempotent (Tính luỹ đẳng)</span> khi gọi API, <span class="keyword">Timeout handling</span>. Lấy ví dụ thực tế từ dự án ATOM sẽ cực kỳ thuyết phục.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="accordion" data-q="3">
+            <button class="accordion-header">
+                <span class="q-number">03</span>
+                <span class="q-text">Bạn đã tham gia go-live hệ thống thanh toán cho 4 tổ chức giáo dục. Quy trình test trước khi go-live của bạn như thế nào?</span>
+                <span class="difficulty diff-hard">Hard</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li><strong>Giai đoạn 1 - Regression Testing:</strong> Chạy lại toàn bộ test case cho các tính năng core (tạo hóa đơn, thu phí, thanh toán online) trên môi trường staging.</li>
+                            <li><strong>Giai đoạn 2 - Integration Testing:</strong> Test kết nối thực tế với cổng thanh toán của bank partner (OCB/BVB/mPAY) - verify callback, webhook, đối soát số liệu.</li>
+                            <li><strong>Giai đoạn 3 - UAT:</strong> Phối hợp với đội ngũ của trường để test trên data thực, verify luồng phụ huynh thanh toán.</li>
+                            <li><strong>Giai đoạn 4 - Smoke Test trên Production:</strong> Sau deploy, chạy smoke test ngay các luồng critical: đăng nhập, tạo phiếu thu, thanh toán 1 giao dịch thật.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Nhấn mạnh bạn có kinh nghiệm <span class="keyword">go-live thực tế</span>, không chỉ test trên staging. Đề cập đến việc phải <span class="keyword">đối soát (Reconciliation)</span> số liệu giữa hệ thống nội bộ và bank sau khi go-live.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CATEGORY 2 ==================== -->
+        <h2 class="category-title">
+            ⚙️ 2. Kỹ thuật Test (Manual, API & Database)
+            <span class="category-badge badge-important">QUAN TRỌNG</span>
+        </h2>
+
+        <!-- Q4 -->
+        <div class="accordion" data-q="4">
+            <button class="accordion-header">
+                <span class="q-number">04</span>
+                <span class="q-text">Bạn hãy nêu cách lên Test Plan và Test Case cho một tính năng thanh toán qua cổng mPAY?</span>
+                <span class="difficulty diff-medium">Medium</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li><strong>Phân tích yêu cầu:</strong> Xác định luồng Happy case (Thanh toán thành công) và Unhappy case (Số dư không đủ, timeout, sai OTP...).</li>
+                            <li><strong>UI/UX Testing:</strong> Hiển thị thông tin giao dịch chính xác, số tiền khớp, redirect đúng trang sau khi thanh toán.</li>
+                            <li><strong>API & Backend:</strong> Dùng <span class="tech-word">Postman/Swagger</span> giả lập request gọi lên mPAY, giả lập nhận response (Callback/Webhook) từ mPAY trả về.</li>
+                            <li><strong>Database:</strong> Truy vấn <span class="tech-word">SQL</span> để đảm bảo Transaction ID được ghi nhận, trạng thái update từ <code>Pending → Success</code>, số dư người dùng bị trừ khớp.</li>
+                            <li><strong>Cross-platform:</strong> Test trên web, mobile, POS device, Soundbox theo kinh nghiệm đã làm ở ATOM.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Đề cập đến việc <span class="keyword">Mock API của bên thứ 3</span> (mPAY). Trong thực tế staging của Bank hay lỗi/offline, QC cần biết dùng Postman Mocks để tự test độc lập. Đây là điểm rất thực tế mà ít ứng viên nói được.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="accordion" data-q="5">
+            <button class="accordion-header">
+                <span class="q-number">05</span>
+                <span class="q-text">Kể tên một vài Negative Test Cases "kinh điển" (Edge cases) mà bạn dùng khi test luồng thanh toán?</span>
+                <span class="difficulty diff-medium">Medium</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li>Nhập số tiền <strong>âm, 0 đồng</strong>, hoặc số tiền rất lớn (vượt hạn mức ngày/tháng).</li>
+                            <li>Người dùng <strong>tắt app/back trình duyệt</strong> đúng lúc màn hình đang "Processing..." → check DB xem status có bị kẹt ở Pending không.</li>
+                            <li><strong>Network throttling</strong> (dùng Chrome DevTools) xem API có bị timeout và update sai status ở Database không.</li>
+                            <li>Dùng DevTools <strong>sửa value số tiền ở Client-side</strong> trước khi Submit → Backend phải bắt lỗi <em>Invalid Amount</em>.</li>
+                            <li>Thanh toán bằng <strong>nhiều phương thức cùng lúc</strong> (chuyển khoản + ví) → check tổng số tiền khớp.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Show cho nhà tuyển dụng thấy bạn có tư duy: <span class="keyword">"Không bao giờ tin tưởng dữ liệu từ Client-side, backend luôn phải validate lại mọi thứ liên quan đến tài chính."</span>
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="accordion" data-q="6">
+            <button class="accordion-header">
+                <span class="q-number">06</span>
+                <span class="q-text">Bạn đã dùng Postman để test API như thế nào? Cho ví dụ về việc test API thanh toán?</span>
+                <span class="difficulty diff-medium">Medium</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li><strong>Tạo Collection:</strong> Em tổ chức các API theo module: Authentication, Payment, Invoice, Notification.</li>
+                            <li><strong>Environments:</strong> Sử dụng biến environment cho từng môi trường (Dev, Staging, Production) với base URL, token khác nhau.</li>
+                            <li><strong>Test Script:</strong> Viết <span class="tech-word">Pre-request Script</span> để auto lấy token trước mỗi request. Viết <span class="tech-word">Test Script</span> để assert status code, response body, response time.</li>
+                            <li><strong>Ví dụ thực tế:</strong> Test API <code>POST /payment/create</code> → verify response trả về <code>payment_url</code> → gọi callback API <code>POST /payment/callback</code> với transaction_id → check DB update status.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Đề cập thêm việc bạn đã dùng <span class="keyword">Swagger</span> để đọc API docs từ Dev, và dùng <span class="keyword">Postman Runner</span> để chạy batch test cho nhiều test data khác nhau (Boundary values, invalid data...).
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="accordion" data-q="7">
+            <button class="accordion-header">
+                <span class="q-number">07</span>
+                <span class="q-text">Bạn đã từng verify dữ liệu ở Database chưa? Cho ví dụ một câu SQL bạn thường dùng khi test thanh toán?</span>
+                <span class="difficulty diff-hard">Hard</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li><strong>Kiến thức cơ bản:</strong> Em nắm vững các khái niệm cơ bản về SQL và cách sử dụng các lệnh thiết yếu như <code>SELECT</code>, <code>JOIN</code>, <code>GROUP BY</code>.</li>
+                            <li><strong>Ứng dụng (Lý thuyết):</strong> Hiểu cách truy vấn để verify status giao dịch hoặc tính tổng tiền để đối soát.</li>
+                            <li><strong>Thực tế dự án:</strong> Tại dự án hiện tại, em chủ yếu focus vào Manual và API Testing. Dù chưa có nhiều cơ hội viết SQL phức tạp thực chiến, em <strong>rất sẵn sàng học hỏi</strong> và áp dụng ngay nếu nhận được task từ team.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Nhà tuyển dụng rất trân trọng sự trung thực. Hãy tự tin thừa nhận <span class="keyword">chưa thực chiến nhiều</span> nhưng ghi điểm bằng cách thể hiện <span class="keyword">sự hiểu biết lý thuyết cơ bản</span> và thái độ sẵn sàng và chủ động học hỏi.
+                    </div>
+                    <div class="warning-tip">
+                        <strong>⚠️ Cẩn thận:</strong>
+                        Nếu nhà tuyển dụng hỏi bạn có UPDATE/DELETE data trên DB không → Trả lời: "Em chỉ có quyền SELECT trên staging/production. Nếu cần sửa data test, em sẽ nhờ Dev hoặc DBA."
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CATEGORY 3 ==================== -->
+        <h2 class="category-title">
+            🤝 3. Quy trình & Kỹ năng mềm
+            <span class="category-badge badge-important">QUAN TRỌNG</span>
+        </h2>
+
+        <!-- Q8 -->
+        <div class="accordion" data-q="8">
+            <button class="accordion-header">
+                <span class="q-number">08</span>
+                <span class="q-text">Khi bạn tìm thấy bug ở luồng thanh toán nhưng Dev nói "Đó không phải là bug, bên thứ 3 (Bank) trả về thế", bạn xử lý sao?</span>
+                <span class="difficulty diff-medium">Medium</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li><strong>Bước 1:</strong> Không tranh cãi ngay. Mở <strong>tài liệu tích hợp API</strong> của bên Bank để check spec có đúng như Dev nói không.</li>
+                            <li><strong>Bước 2:</strong> Mở <span class="tech-word">Postman/Log hệ thống</span>, chụp lại chính xác Payload đã gửi và Response nhận về làm <span class="keyword">evidence</span>.</li>
+                            <li><strong>Bước 3:</strong> Nếu do Bank trả về thật → thảo luận với Dev/BA xem hệ thống có nên <em>Handle lỗi tốt hơn</em> (hiện thông báo thân thiện cho user thay vì crash).</li>
+                            <li><strong>Bước 4:</strong> Nếu cần, report PM để làm việc trực tiếp với support team phía Bank.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Tuyệt đối không có tư duy đổ lỗi (Blame). Nhấn mạnh: <span class="keyword">Dựa trên Data & Specs</span> và hướng tới <span class="keyword">Trải nghiệm người dùng (UX)</span> dù lỗi sinh ra từ ai. Đây chính là cross-functional collaboration mà JD yêu cầu.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="accordion" data-q="9">
+            <button class="accordion-header">
+                <span class="q-number">09</span>
+                <span class="q-text">Bạn có kinh nghiệm tham gia ISO (20000-1, 27001, 22301). Vai trò của QC trong việc đạt chứng nhận ISO là gì?</span>
+                <span class="difficulty diff-easy">Easy</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li><strong>ISO 27001 (Bảo mật thông tin):</strong> QC đảm bảo hệ thống tuân thủ các quy trình bảo mật - test phân quyền, mã hóa dữ liệu, xử lý thông tin nhạy cảm (thẻ tín dụng, số tài khoản).</li>
+                            <li><strong>ISO 20000-1 (Quản lý dịch vụ IT):</strong> QC tham gia vào quy trình quản lý incident, change management, đảm bảo SLA cho hệ thống thanh toán.</li>
+                            <li><strong>Vai trò cụ thể:</strong> Em tham gia viết quy trình test, tạo checklist audit, review lại quy trình release để đảm bảo compliance.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        Đây là <span class="keyword">điểm độc nhất</span> trong CV của bạn mà rất ít ứng viên QC có. Công ty Payment cực kỳ coi trọng ISO 27001 (bảo mật). Hãy nhấn mạnh việc bạn hiểu <span class="keyword">compliance testing</span> và <span class="keyword">security mindset</span>.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CATEGORY 4 ==================== -->
+        <h2 class="category-title">
+            🚀 4. Automation & Phát triển bản thân
+            <span class="category-badge badge-bonus">BONUS</span>
+        </h2>
+
+        <!-- Q10 -->
+        <div class="accordion" data-q="10">
+            <button class="accordion-header">
+                <span class="q-number">10</span>
+                <span class="q-text">Bạn đã áp dụng AI vào automation testing như thế nào? Kế hoạch phát triển bản thân trong 1-2 năm tới?</span>
+                <span class="difficulty diff-easy">Easy</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p><strong>🗣️ Gợi ý trả lời:</strong></p>
+                        <ul class="answer-list">
+                            <li><strong>Tinh thần học hỏi:</strong> Em đang dành thời gian cá nhân để <strong>tự học và tìm hiểu</strong> về Automation Testing với <span class="tech-word">Playwright</span>, kết hợp dùng AI để tìm hiểu cách viết test case tự động hóa.</li>
+                            <li><strong>Mục tiêu với Auto:</strong> Mục tiêu của em là hiểu cơ chế Automation để giảm thiểu workload cho Manual Regression Testing. Quá trình học giúp em có tư duy tốt hơn về test structure. Dù ở mức độ tìm hiểu, em tin mình sẽ bắt nhịp rất nhanh nếu dự án yêu cầu áp dụng.</li>
+                            <li><strong>Kế hoạch 1-2 năm:</strong>
+                                <ul>
+                                    <li>Nâng cao khả năng sử dụng <span class="keyword">Playwright</span> để có thể tự tin áp dụng vào dự án thực tế.</li>
+                                    <li>Đào sâu kiến thức về nghiệp vụ thanh toán để làm một Manual/API Engineer vững vàng.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Mẹo ghi điểm:</strong>
+                        JD nói <span class="keyword">"Utilize automation tools, analyze results, and drive continuous improvement"</span>. Bạn đã có Playwright + AI, đây là lợi thế rất lớn. Nhấn mạnh bạn dùng automation để hỗ trợ manual testing (80%) chứ không thay thế - đúng với tỷ lệ JD yêu cầu.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Đánh dấu đã ôn</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>💪 Chúc bạn phỏng vấn thành công! &bull; Dựa trên CV & JD Payment/E-wallet</p>
+            <p><a href="../index.html">← Quay lại CV</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Accordion Functionality
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const accordion = button.parentElement;
+                const isActive = accordion.classList.contains('active');
+
+                if (!isActive) {
+                    accordion.classList.add('active');
+                } else {
+                    accordion.classList.remove('active');
+                }
+            });
+        });
+
+        // Mark Done Functionality
+        function toggleDone(btn) {
+            const accordion = btn.closest('.accordion');
+            const isDone = accordion.classList.toggle('done');
+
+            if (isDone) {
+                btn.textContent = '✅ Đã ôn xong!';
+                btn.classList.add('is-done');
+            } else {
+                btn.textContent = '✅ Đánh dấu đã ôn';
+                btn.classList.remove('is-done');
+            }
+
+            updateProgress();
+            saveProgress();
+        }
+
+        // Progress Bar
+        function updateProgress() {
+            const total = document.querySelectorAll('.accordion[data-q]').length;
+            const done = document.querySelectorAll('.accordion.done').length;
+            const percentage = (done / total) * 100;
+
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `${done} / ${total} câu đã ôn`;
+        }
+
+        // Save/Load Progress to localStorage
+        function saveProgress() {
+            const doneQuestions = [];
+            document.querySelectorAll('.accordion.done').forEach(acc => {
+                doneQuestions.push(acc.dataset.q);
+            });
+            localStorage.setItem('interview-progress', JSON.stringify(doneQuestions));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('interview-progress');
+            if (saved) {
+                const doneQuestions = JSON.parse(saved);
+                doneQuestions.forEach(q => {
+                    const acc = document.querySelector(`.accordion[data-q="${q}"]`);
+                    if (acc) {
+                        acc.classList.add('done');
+                        const btn = acc.querySelector('.mark-done-btn');
+                        if (btn) {
+                            btn.textContent = '✅ Đã ôn xong!';
+                            btn.classList.add('is-done');
+                        }
+                    }
+                });
+                updateProgress();
+            }
+        }
+
+        // Load on page start
+        loadProgress();
+    </script>
+</body>
+
+</html>

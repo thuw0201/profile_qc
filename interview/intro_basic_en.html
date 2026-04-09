@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Intro - QA/QC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ec4899;
+            --primary-hover: #db2777;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e1b4b;
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --accent-green: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #f472b6, #fb7185);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .subtitle {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 16px;
+            background: rgba(236, 72, 153, 0.15);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #fbcfe8;
+        }
+
+        .accordion {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out backwards;
+        }
+
+        .accordion:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .accordion.active {
+            border-color: rgba(236, 72, 153, 0.4);
+        }
+
+        .accordion:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .accordion:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .accordion:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .accordion:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        .accordion:nth-child(6) {
+            animation-delay: 0.5s;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 20px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            font-family: inherit;
+        }
+
+        .q-number {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(236, 72, 153, 0.15);
+            color: #fbcfe8;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .q-text {
+            flex: 1;
+        }
+
+        .icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .icon::before,
+        .icon::after {
+            content: '';
+            position: absolute;
+            background-color: var(--text-main);
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .icon::before {
+            top: 11px;
+            left: 0;
+            width: 24px;
+            height: 2px;
+        }
+
+        .icon::after {
+            top: 0;
+            left: 11px;
+            width: 2px;
+            height: 24px;
+        }
+
+        .accordion.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion.active .icon::after {
+            transform: scaleY(0);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .accordion.active .accordion-content {
+            max-height: 1000px;
+            transition: max-height 0.8s ease-in-out;
+        }
+
+        .content-inner {
+            padding: 0 24px 24px 24px;
+        }
+
+        .english-ans {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            color: #f1f5f9;
+            margin-top: 15px;
+            line-height: 1.7;
+        }
+
+        .pronunciation {
+            margin-top: 12px;
+            color: #bef264;
+            font-size: 1rem;
+            border-left: 3px solid #65a30d;
+            background: rgba(101, 163, 13, 0.05);
+            padding: 10px 15px;
+            border-radius: 0 6px 6px 0;
+            line-height: 1.5;
+        }
+
+        .vietnamese-trans {
+            margin-top: 15px;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            padding-left: 10px;
+            border-left: 3px solid #64748b;
+        }
+
+        .keyword {
+            color: #fce7f3;
+            font-weight: 600;
+            background: rgba(236, 72, 153, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--text-secondary);
+        }
+
+        footer a {
+            color: #f472b6;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Basic Self-Introduction</h1>
+            <p>5 câu hỏi vỡ lòng nhất để giới thiệu bản thân bằng Tiếng Anh</p>
+            <span class="subtitle">Ngữ pháp rất cơ bản - Dễ học thuộc - Gắn sát với CV của bạn</span>
+        </header>
+
+        <!-- Q1 -->
+        <div class="accordion">
+            <button class="accordion-header">
+                <span class="q-number">01</span>
+                <span class="q-text">Could you please introduce yourself? <br><small
+                        style="color: #94a3b8; font-weight: normal;">(Bạn có thể giới thiệu bản thân được
+                        không?)</small></span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="english-ans">
+                        "Hello. My name is Thu. I have <span class="keyword">over 3 years of experience</span> as a
+                        QA/QC Engineer.<br><br>
+                        Currently, I am working at ATOM SOLUTION, testing Payment and ERP systems. I am a careful person
+                        and I always try my best at work. Nice to meet you!"
+                    </div>
+                    <div class="pronunciation">
+                        <audio controls src="q1.m4a" style="width: 100%; height: 35px; border-radius: 6px; margin-bottom: 8px;"></audio><br>
+                        <strong>🗣️ Cách đọc:</strong> "Hế-lô. Mai nêm is Thư. Ai hép ô-vờ đờ-ri dia x-ợp ích-x-pía-ri-ần-x(s) ét ờ kiu-ây/kiu-xi en-gi-nia.<br><br>
+                        Cơ-rần-li, ai em guốc-kình ét A-tôm xô-lu-sần, tét-tinh Pây-mần en i-a-pi xít-tầm-x(s). Ai em ờ ke-phun pơ-sần en ai o-goây choai mai bét ét guốc. Nai tu mít du!"
+                    </div>
+                    <div class="vietnamese-trans">
+                        <strong>Dịch nghĩa:</strong> "Xin chào. Tôi tên là Thư. Tôi có hơn 3 năm kinh nghiệm làm kỹ sư
+                        quản lý chất lượng.<br><br>
+                        Hiện tại, tôi đang làm việc tại ATOM SOLUTION, kiểm thử các hệ thống thanh toán và ERP. Tôi là
+                        một người cẩn thận và luôn cố gắng hết sức trong công việc. Rất vui được gặp các bạn!"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="accordion">
+            <button class="accordion-header">
+                <span class="q-number">02</span>
+                <span class="q-text">What is your educational background? <br><small
+                        style="color: #94a3b8; font-weight: normal;">(Nền tảng học vấn của bạn là gì?)</small></span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="english-ans">
+                        "I studied at <span class="keyword">Nong Lam University</span>. During that time, I also
+                        completed a professional Software Testing course at <span class="keyword">FPT Software
+                            Academy</span> to build a strong foundation for my career."
+                    </div>
+                    <div class="pronunciation">
+                        <audio controls src="q2.m4a" style="width: 100%; height: 35px; border-radius: 6px; margin-bottom: 8px;"></audio><br>
+                        <strong>🗣️ Cách đọc:</strong> "Ai xta-đi-ựt ét Nông Lâm du-ni-vơ-xi-ti. Điu-rinh đát tham, ai ôn-xô căm-pờ-lít-ựt ờ pờ-rô-phét-sần-nồ xóp-goe test-tinh cóc (course) ét FPT xóp-goe a-ca-đê-mi tu biu(l) ờ xt-riong phao-đây-sần pho mai cờ-ria."
+                    </div>
+                    <div class="vietnamese-trans">
+                        <strong>Dịch nghĩa:</strong> "Tôi đã học tại trường Đại học Nông Lâm. Trong thời gian đó, tôi
+                        cũng hoàn thành một khóa học Kiểm thử phần mềm chuyên nghiệp tại FPT Software Academy để xây
+                        dựng nền tảng vững chắc cho sự nghiệp."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="accordion">
+            <button class="accordion-header">
+                <span class="q-number">03</span>
+                <span class="q-text">What are your strengths? <br><small
+                        style="color: #94a3b8; font-weight: normal;">(Điểm mạnh của bạn là gì?)</small></span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="english-ans">
+                        "My biggest strength is my <span class="keyword">attention to detail</span>. In software
+                        testing, it's very important to catch small bugs before users find them.<br><br>
+                        Also, I am a <span class="keyword">fast learner</span> and I have good communication skills to
+                        work well with developers."
+                    </div>
+                    <div class="pronunciation">
+                        <audio controls src="q3.m4a" style="width: 100%; height: 35px; border-radius: 6px; margin-bottom: 8px;"></audio><br>
+                        <strong>🗣️ Cách đọc:</strong> "Mai bích-gít xt-reng is mai ợt-ten-sần tu đi-têu(l). In xóp-goe test-tình, ít is ve-ri im-pó-tần tu cát-ch(s) xmôn bấc bi-pho du-dờ phai (find) đem.<br><br>
+                        Ôn-xô, ai em ờ phát lơ-nờ en ai hép gút căm-miu-ni-cây-sần x-kiu-x(s) tu guốc geo guýt đi-ve-lốp-pờ-x(s)."
+                    </div>
+                    <div class="vietnamese-trans">
+                        <strong>Dịch nghĩa:</strong> "Điểm mạnh lớn nhất của tôi là sự chú ý đến từng chi tiết. Trong
+                        kiểm thử phần mềm, việc bắt được các lỗi nhỏ trước khi người dùng phát hiện là rất quan
+                        trọng.<br><br>
+                        Ngoài ra, tôi học hỏi nhanh và có kỹ năng giao tiếp tốt để làm việc hiệu quả với các lập trình
+                        viên."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="accordion">
+            <button class="accordion-header">
+                <span class="q-number">04</span>
+                <span class="q-text">What is your weakness? <br><small
+                        style="color: #94a3b8; font-weight: normal;">(Điểm yếu của bạn là gì?)</small></span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="english-ans">
+                        "Sometimes, I focus too much on details and want everything to be perfect. Another weakness is
+                        that my English communication is <span class="keyword">not very fluent yet</span>.<br><br>
+                        However, my reading and writing skills are good, and I am practicing spoken English every day to
+                        improve."
+                    </div>
+                    <div class="pronunciation">
+                        <audio controls src="q4.m4a" style="width: 100%; height: 35px; border-radius: 6px; margin-bottom: 8px;"></audio><br>
+                        <strong>🗣️ Cách đọc:</strong> "Xăm-tham, ai phô-cớt tu mứt-ch(s) on đi-têu-x(s) en goăn ép-vơ-ri-thing tu bi pơ-phệch. Ân-na-đờ goích-nợt is đát mai i-lịch căm-miu-ni-cây-sần is nót ve-ri pờ-lu-ần diết.<br><br>
+                        Hao-e-vờ, mai rít-đinh en goai-tinh x-kiu a gút, en ai em pờ-rắc-tít-xình xbốc-cần i-lịch e-vờ-ri đây tu im-pờ-ru!"
+                    </div>
+                    <div class="vietnamese-trans">
+                        <strong>Dịch nghĩa:</strong> "Đôi khi, tôi tập trung quá nhiều vào chi tiết và muốn mọi thứ phải
+                        hoàn hảo. Một điểm yếu nữa là giao tiếp tiếng Anh của tôi chưa thật sự lưu loát.<br><br>
+                        Tuy nhiên, kỹ năng đọc và viết của tôi tốt, và tôi đang luyện nói tiếng Anh mỗi ngày để cải
+                        thiện." (Lưu ý: Điểm yếu này rất chân thật và an toàn!).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="accordion">
+            <button class="accordion-header">
+                <span class="q-number">05</span>
+                <span class="q-text">Why did you choose QA/QC as your career? <br><small
+                        style="color: #94a3b8; font-weight: normal;">(Tại sao bạn lại chọn nghề QA/QC?)</small></span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="english-ans">
+                        "I love the process of finding problems and ensuring product quality. I enjoy <span
+                            class="keyword">double-checking things</span> to make sure they work perfectly
+                        safely.<br><br>
+                        Being a QA engineer perfectly fits my careful and logical personality."
+                    </div>
+                    <div class="pronunciation">
+                        <audio controls src="q5.m4a" style="width: 100%; height: 35px; border-radius: 6px; margin-bottom: 8px;"></audio><br>
+                        <strong>🗣️ Cách đọc:</strong> "Ai lấp đờ pờ-rô-xét ợp phai-đinh pờ-rốp-lầm en en-sùa-rình pờ-rồ-đấc qua-li-ti. Ai in-doi đấp-bồ chếp-kình thing-x(s) tu mếch xua đây guốc pơ-phệch-li xép-li.<br><br>
+                        Bi-inh ờ kiu-ây en-gi-nia pơ-phệch-li phít mai ke-phun en lô-di-cồ pơ-xần-na-li-ti."
+                    </div>
+                    <div class="vietnamese-trans">
+                        <strong>Dịch nghĩa:</strong> "Tôi yêu thích quá trình tìm kiếm vấn đề và đảm bảo chất lượng sản
+                        phẩm. Tôi thích kiểm tra đi kiểm tra lại mọi thứ để đảm bảo chúng hoạt động hoàn hảo và an
+                        toàn.<br><br>
+                        Trở thành một QA hoàn toàn phù hợp với tính cách cẩn thận và tư duy logic của tôi."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Short & Simple Version 🌸</p>
+            <a href="interview_en.html">← Câu hỏi chuyên môn</a> |
+            <a href="../index.html">Quay lại CV</a>
+        </footer>
+    </div>
+
+    <script>
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const accordion = button.parentElement;
+                const isActive = accordion.classList.contains('active');
+                if (!isActive) { accordion.classList.add('active'); }
+                else { accordion.classList.remove('active'); }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic English Q&A - QA/QC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e1b4b;
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-cyan: #06b6d4;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header Animation */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .subtitle {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 16px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #93c5fd;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-out 0.5s backwards;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-track {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        /* Category styling */
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 20px 0;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Accordion Styling */
+        .accordion {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out backwards;
+        }
+
+        .accordion:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .accordion.active {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .accordion.done {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .accordion.done .accordion-header .q-number {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        .accordion:nth-child(2) { animation-delay: 0.1s; }
+        .accordion:nth-child(3) { animation-delay: 0.2s; }
+        .accordion:nth-child(4) { animation-delay: 0.3s; }
+        .accordion:nth-child(5) { animation-delay: 0.4s; }
+
+        .accordion-header {
+            width: 100%;
+            padding: 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .q-number {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .q-text {
+            flex: 1;
+        }
+
+        .icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .icon::before,
+        .icon::after {
+            content: '';
+            position: absolute;
+            background-color: var(--text-main);
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .icon::before {
+            top: 11px;
+            left: 0;
+            width: 24px;
+            height: 2px;
+        }
+
+        .icon::after {
+            top: 0;
+            left: 11px;
+            width: 2px;
+            height: 24px;
+        }
+
+        .accordion.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion.active .icon::after {
+            transform: scaleY(0);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .accordion.active .accordion-content {
+            max-height: 3000px;
+            transition: max-height 0.8s ease-in-out;
+        }
+
+        .content-inner {
+            padding: 0 24px 24px 24px;
+        }
+
+        /* Inner Content Styling */
+        .answer-box {
+            margin-top: 15px;
+            color: #cbd5e1;
+            font-size: 1.05rem;
+        }
+
+        .answer-box > p:first-child {
+            color: #e2e8f0;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-tip {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-tip strong {
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .keyword {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .english-ans {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+            color: #f1f5f9;
+            margin-bottom: 15px;
+        }
+
+        /* Mark done button */
+        .mark-done-btn {
+            margin-top: 20px;
+            padding: 8px 20px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .mark-done-btn:hover {
+            background: rgba(16, 185, 129, 0.25);
+            transform: scale(1.02);
+        }
+
+        .mark-done-btn.is-done {
+            background: rgba(16, 185, 129, 0.3);
+            color: #a7f3d0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            animation: fadeIn 1s ease-out 1s backwards;
+        }
+
+        footer a {
+            color: #93c5fd;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .accordion-header { font-size: 1rem; padding: 18px; }
+            .q-number { width: 30px; height: 30px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>English Interview Q&A</h1>
+            <p>10 Cơ bản & Thực chiến bằng tiếng Anh cho QA/QC Payment</p>
+            <span class="subtitle">🇬🇧 Basic & Behavioral Questions</span>
+        </header>
+
+        <!-- Progress -->
+        <div class="progress-bar">
+            <div class="progress-info">
+                <span>Learning Progress</span>
+                <span id="progress-text">0 / 10 learned</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- ==================== PART 1 ==================== -->
+        <h2 class="category-title">👋 Part 1: Introduction & Experience</h2>
+
+        <!-- Q1 -->
+        <div class="accordion" data-q="1">
+            <button class="accordion-header">
+                <span class="q-number">01</span>
+                <span class="q-text">Could you tell me a little bit about yourself?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "Yes. My name is Thu. I have over 3 years of experience as a QA/QC Engineer, heavily focused on ERP management systems, E-wallets, and payment platforms.<br><br>
+                            Currently, I work at ATOM SOLUTION, where my main focus is on manual testing and API testing for multi-modal payment methods. In addition, I am actively learning database verification and automation tools like Playwright to expand my skillset."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Đừng kể lể về gia đình hay sở thích. Hãy đi thẳng vào: <span class="keyword">Số năm kinh nghiệm + Domain hiện tại (Payment/ERP) + Kỹ năng nổi bật (API, SQL, Automation)</span>.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="accordion" data-q="2">
+            <button class="accordion-header">
+                <span class="q-number">02</span>
+                <span class="q-text">What are your greatest strengths?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "I would say my biggest strengths are my documentation skills and attention to detail. In payment systems, a small mistake can cause financial loss, so I always create strict test cases and checklists to ensure data integrity.<br><br>
+                            Besides, I am a fast learner and constantly seeking self-improvement. Currently, I am dedicating my free time to learning automation testing with Playwright to prepare for future requirements."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Gắn điểm mạnh của bạn với yêu cầu của ngành Payment: <span class="keyword">Sự cẩn thận (attention to detail)</span> và <span class="keyword">tính an toàn dữ liệu (data integrity)</span>.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="accordion" data-q="3">
+            <button class="accordion-header">
+                <span class="q-number">03</span>
+                <span class="q-text">Why did you choose QA/QC as your career?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "I have a passion for solving problems and delivering high-quality products to users. I enjoy the process of breaking things logically to find hidden bugs before they reach the customers.<br><br>
+                            Also, my background and critical thinking skills perfectly align with the mindset needed for testing."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Nhấn mạnh sự đam mê (passion) trong việc tìm bug và bảo vệ trải nghiệm người dùng.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PART 2 ==================== -->
+        <h2 class="category-title">⚙️ Part 2: Technical & Domain Knowledge</h2>
+
+        <!-- Q4 -->
+        <div class="accordion" data-q="4">
+            <button class="accordion-header">
+                <span class="q-number">04</span>
+                <span class="q-text">Can you describe your experience with API testing?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "Yes, I have strong experience in API testing. I mainly use Postman and Swagger.<br><br>
+                            For payment gateways, I often simulate requests to create orders and mock callback responses from the bank to verify if our system updates the transaction status correctly. I also check status codes, response times, and data fields."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Nhắc đến các công cụ cụ thể (<span class="keyword">Postman, Swagger</span>) và bối cảnh thực tế (<span class="keyword">mock callback responses</span>) để chứng minh bạn thực sự đã làm.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="accordion" data-q="5">
+            <button class="accordion-header">
+                <span class="q-number">05</span>
+                <span class="q-text">Do you have experience in Database or SQL testing?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "I have a fundamental understanding of SQL and am familiar with basic commands like SELECT, JOIN, and GROUP BY.<br><br>
+                            Since my current role focuses mostly on UI and API testing, I haven't had the chance to apply SQL deeply in a real project yet. However, I am a fast learner, and I am very eager to jump in and practice database verification if my new team needs it."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Nhà tuyển dụng trân trọng sự trung thực. Hãy thẳng thắn thừa nhận việc <span class="keyword">chưa có kinh nghiệm thực chiến</span> bằng cách ghi điểm nhờ tinh thần sẵn sàng học hỏi.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="accordion" data-q="6">
+            <button class="accordion-header">
+                <span class="q-number">06</span>
+                <span class="q-text">What is the difference between Verification and Validation?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "Verification means checking documents, designs, or code to ensure we are building the product right. It is a static process without running the software.<br><br>
+                            Validation means executing the actual software to ensure it meets the customer's requirements. This answers the question: Are we building the right product?"
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Đây là câu hỏi lý thuyết kinh điển của ISTQB. Hãy nhớ: <span class="keyword">Verification = Không chạy code (Review doc). Validation = Chạy code (Test UI/API)</span>.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PART 3 ==================== -->
+        <h2 class="category-title">🤝 Part 3: Behavioral & Situational (Thử thách & Tình huống)</h2>
+
+        <!-- Q7 -->
+        <div class="accordion" data-q="7">
+            <button class="accordion-header">
+                <span class="q-number">07</span>
+                <span class="q-text">How do you handle a bug that a developer says is "Not a Bug"?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "First, I don't argue. I double-check the requirements and API documentation to make sure I am right.<br><br>
+                            Then, I will provide clear evidence like screenshots, video records, or Postman logs. Finally, I organize a quick meeting with the Developer and the Business Analyst (BA) to clarify the expected behavior and reach an agreement."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Thể hiện sự chuyên nghiệp, không cãi vã. Luôn giải quyết dựa trên <span class="keyword">tài liệu (Specs)</span> và <span class="keyword">Bằng chứng (Evidence)</span>.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="accordion" data-q="8">
+            <button class="accordion-header">
+                <span class="q-number">08</span>
+                <span class="q-text">Tell me about a challenge you faced at work and how you overcame it?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "A big challenge was when we tested with a new bank partner, but their staging environment was unstable and frequently offline. It blocked our progress.<br><br>
+                            To solve this, I studied their API documentation and created mock servers using Postman. This allowed my team to continue testing our internal callback logic independently without waiting for the bank."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Dùng cấu trúc STAR (Tình huống -> Mục tiêu -> Hành động -> Kết quả). Hành động tạo <span class="keyword">Mock Server</span> thể hiện sự chủ động của bạn.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="accordion" data-q="9">
+            <button class="accordion-header">
+                <span class="q-number">09</span>
+                <span class="q-text">What will you do if you find a critical bug right before the release deadline?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "If it's a critical bug, especially in the payment flow, my priority is to report it immediately to the Project Manager and the Dev team.<br><br>
+                            I will provide all reproduction steps and logs. We must assess the risk together. If the bug causes financial loss or crashes the system, I will suggest delaying the release. Product quality and safety must always come first."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Với hệ thống thanh toán, Không được thỏa hiệp với lỗi nghiêm trọng. Thể hiện quan điểm mạnh mẽ: <span class="keyword">"Product quality and safety must always come first"</span>.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="accordion" data-q="10">
+            <button class="accordion-header">
+                <span class="q-number">10</span>
+                <span class="q-text">Where do you see yourself in the next 2-3 years?</span>
+                <span class="icon"></span>
+            </button>
+            <div class="accordion-content">
+                <div class="content-inner">
+                    <div class="answer-box">
+                        <p>🗣️ Suggested Answer / Câu trả lời gợi ý:</p>
+                        <div class="english-ans">
+                            "In the next two to three years, I want to continue developing my expertise as a QA Engineer specializing in Payment systems.<br><br>
+                            While manual testing and product flow analysis are my core strengths, my immediate goal is to successfully transition my current Playwright learning into real automation projects. I also hope to take on more responsibilities, like training freshers."
+                        </div>
+                    </div>
+                    <div class="highlight-tip">
+                        <strong>💡 Tips (Mẹo):</strong>
+                        Cho thấy định hướng rõ ràng và gắn với nội dung công việc JD yêu cầu: phát triển Automation nhưng không bỏ quên Manual/Nghiệp vụ.
+                    </div>
+                    <button class="mark-done-btn" onclick="toggleDone(this)">✅ Mark as Learned</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Good luck with your English interview! 🚀</p>
+            <div style="margin-top: 15px;">
+                <a href="interview.html">← Câu hỏi Tiếng Việt</a> |
+                <a href="../index.html">Quay lại CV</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Accordion Functionality
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const accordion = button.parentElement;
+                const isActive = accordion.classList.contains('active');
+
+                if (!isActive) {
+                    accordion.classList.add('active');
+                } else {
+                    accordion.classList.remove('active');
+                }
+            });
+        });
+
+        // Mark Done Functionality
+        function toggleDone(btn) {
+            const accordion = btn.closest('.accordion');
+            const isDone = accordion.classList.toggle('done');
+
+            if (isDone) {
+                btn.textContent = '✅ Completed!';
+                btn.classList.add('is-done');
+            } else {
+                btn.textContent = '✅ Mark as Learned';
+                btn.classList.remove('is-done');
+            }
+
+            updateProgress();
+            saveProgress();
+        }
+
+        // Progress Bar
+        function updateProgress() {
+            const total = document.querySelectorAll('.accordion[data-q]').length;
+            const done = document.querySelectorAll('.accordion.done').length;
+            const percentage = (done / total) * 100;
+
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `${done} / ${total} learned`;
+        }
+
+        // Save/Load Progress
+        function saveProgress() {
+            const doneQuestions = [];
+            document.querySelectorAll('.accordion.done').forEach(acc => {
+                doneQuestions.push(acc.dataset.q);
+            });
+            localStorage.setItem('interview-en-progress', JSON.stringify(doneQuestions));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('interview-en-progress');
+            if (saved) {
+                const doneQuestions = JSON.parse(saved);
+                doneQuestions.forEach(q => {
+                    const acc = document.querySelector(`.accordion[data-q="${q}"]`);
+                    if (acc) {
+                        acc.classList.add('done');
+                        const btn = acc.querySelector('.mark-done-btn');
+                        if (btn) {
+                            btn.textContent = '✅ Completed!';
+                            btn.classList.add('is-done');
+                        }
+                    }
+                });
+                updateProgress();
+            }
+        }
+
+        // Initialize
+        loadProgress();
+    </script>
+</body>
+
+</html>

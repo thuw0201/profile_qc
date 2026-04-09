@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --text-color: #000000;
+    --bg-color: #ffffff;
+    --a4-width: 210mm;
+    --a4-height: 297mm;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #e5e7eb;
+    color: var(--text-color);
+    line-height: 1.35; 
+    font-size: 11px; /* "Goldilocks" size: không quá to, không quá nhỏ */
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.resume-container {
+    width: var(--a4-width);
+    min-height: var(--a4-height); 
+    background-color: var(--bg-color);
+    padding: 12mm 15mm; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid #000;
+}
+
+header h1 {
+    font-size: 24px; 
+    font-weight: 800;
+    letter-spacing: 0.15em; 
+    margin-bottom: 0.1rem;
+    text-transform: uppercase;
+}
+
+header h2 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+header p {
+    font-style: italic;
+    font-size: 11px;
+    color: #222;
+}
+
+/* Section Common Styles */
+section {
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #000;
+}
+
+section.border-none {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+section h3 {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
+
+.objective p {
+    text-align: justify;
+    font-size: 11px;
+}
+
+/* Typography styles */
+h4 {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+h5.underlined {
+    font-size: 11.5px;
+    font-weight: 700;
+    text-decoration: underline;
+    margin-top: 0.4rem;
+    margin-bottom: 0.2rem;
+}
+
+/* Job/Experience Styles */
+.job {
+    margin-bottom: 0.4rem;
+}
+
+.job:last-child {
+    margin-bottom: 0;
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.1rem;
+}
+
+.date {
+    font-weight: 700;
+    font-size: 11px;
+}
+
+/* Lists */
+ul {
+    list-style-type: disc;
+    margin-left: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+ul li {
+    margin-bottom: 0.15rem;
+    text-align: justify;
+}
+
+.sub-list {
+    list-style-type: none;
+    margin-left: 0.3rem;
+    margin-top: 0.1rem;
+}
+
+.sub-list li {
+    margin-bottom: 0.1rem;
+}
+
+/* Strengths Section */
+.two-column {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.column {
+    flex: 1;
+}
+
+.edu-details h4 {
+    margin-bottom: 0.1rem;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+/* Highlight styling */
+mark {
+    background-color: transparent;
+    font-weight: inherit;
+}
+
+/* ------------- BẢN IN PDF (Print / PDF Export) ------------- */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0; 
+    }
+
+    body {
+        padding: 0;
+        background-color: white;
+        display: block;
+    }
+
+    .resume-container {
+        width: 100%;
+        height: 297mm; /* Cố định chiều cao A4 */
+        margin: 0;
+        padding: 10mm 15mm; /* Khoảng cách lề tuyệt đẹp */
+        box-shadow: none; 
+        border: none;
+        overflow: hidden; /* Cấm tuyệt đối tràn sang trang 2 */
+        page-break-after: avoid; 
+        page-break-inside: avoid;
+    }
+}

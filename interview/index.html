@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Interview - QA/QC Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Background Decoration -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="app-wrapper">
+        <header>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="header-info">
+                <span>Câu hỏi <span id="current-q">1</span>/<span id="total-q">5</span></span>
+                <span class="category-badge" id="category-badge">Kinh nghiệm & Domain</span>
+            </div>
+        </header>
+
+        <main id="slider-container">
+            <!-- Questions will be injected here by script.js to keep HTML clean -->
+        </main>
+
+        <div class="controls">
+            <button id="btn-prev" class="nav-btn" disabled>
+                <i class="fa-solid fa-arrow-left"></i> Câu trước
+            </button>
+            <button id="btn-next" class="nav-btn btn-primary">
+                Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
