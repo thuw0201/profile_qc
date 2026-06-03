@@ -17,7 +17,7 @@ body {
     font-family: 'Inter', sans-serif;
     background-color: #e5e7eb;
     color: var(--text-color);
-    line-height: 1.35; 
+    line-height: 1.3; 
     font-size: 11px;
     display: flex;
     justify-content: center;
@@ -64,8 +64,8 @@ header p {
 
 /* Section Common Styles */
 section {
-    margin-bottom: 0.6rem;
-    padding-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.3rem;
     border-bottom: 1px solid #000;
 }
 
@@ -76,7 +76,7 @@ section.border-none {
 }
 
 section h3 {
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
@@ -167,7 +167,7 @@ ul li {
 /* Highlight styling */
 mark {
     background-color: transparent;
-    font-weight: 700;
+    font-weight: normal;
 }
 
 /* ------------- BẢN IN PDF (Print / PDF Export) ------------- */
@@ -187,7 +187,7 @@ mark {
         width: 100%;
         height: 297mm;
         margin: 0;
-        padding: 10mm 15mm;
+        padding: 8mm 15mm;
         box-shadow: none; 
         border: none;
         overflow: hidden;
